@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jack | CS Student & Aspiring Data Scientist</title>
+  <meta name="description" content="Computer science student and aspiring data scientist portfolio showcasing hand-coded and AI-assisted projects.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: #0a0b0f;
+      color: #e2e4ea;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0a0b0f; }
+    ::-webkit-scrollbar-thumb { background: #2a2d3a; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3a3d4a; }
+
+    /* ===== CSS VARIABLES ===== */
+    :root {
+      --bg-primary: #0a0b0f;
+      --bg-secondary: #12141c;
+      --bg-card: #161922;
+      --bg-elevated: #1c1f2e;
+      --text-primary: #e2e4ea;
+      --text-secondary: #8b8fa3;
+      --text-muted: #5a5e72;
+      --forge-primary: #f97316;
+      --forge-glow: #fb923c;
+      --forge-dim: rgba(249, 115, 22, 0.08);
+      --forge-border: rgba(249, 115, 22, 0.35);
+      --circuit-primary: #8b5cf6;
+      --circuit-glow: #a78bfa;
+      --circuit-dim: rgba(139, 92, 246, 0.08);
+      --circuit-border: rgba(139, 92, 246, 0.35);
+      --font-heading: 'Space Grotesk', 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ===== HERO ===== */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    #heroCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2rem;
+    }
+    .hero-name {
+      font-family: var(--font-heading);
+      font-size: clamp(4rem, 12vw, 9rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      position: relative;
+      display: inline-block;
+    }
+    .hero-name .forge-half {
+      background: linear-gradient(135deg, #f97316, #fb923c, #fbbf24);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-name .circuit-half {
+      background: linear-gradient(135deg, #8b5cf6, #a78bfa, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-name::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #f97316 0%, #f97316 50%, #8b5cf6 50%, #8b5cf6 100%);
+      opacity: 0.6;
+    }
+    .hero-subtitle {
+      font-family: var(--font-mono);
+      font-size: clamp(0.9rem, 2vw, 1.15rem);
+      color: var(--text-secondary);
+      margin-top: 1rem;
+      font-weight: 400;
+    }
+    .hero-tagline {
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      color: var(--text-primary);
+      margin-top: 1.5rem;
+      line-height: 1.7;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2.5rem;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-number {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: 2.8rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .forge-stat .stat-number { color: var(--forge-primary); }
+    .circuit-stat .stat-number { color: var(--circuit-primary); }
+    .stat-label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 0.4rem;
+    }
+    .stat-divider {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(180deg, var(--forge-primary), var(--circuit-primary));
+      opacity: 0.4;
+    }
+    .scroll-cta {
+      display: inline-block;
+      margin-top: 3rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      animation: float 2.5s ease-in-out infinite;
+    }
+    .scroll-cta svg { width: 24px; height: 24px; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    /* ===== ABOUT ===== */
+    .about-section {
+      padding: 6rem 1.5rem;
+      max-width: 800px;
+      margin: 0 auto;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+    }
+    .about-section.visible { opacity: 1; transform: translateY(0); }
+    .terminal {
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: #161b22;
+      border-bottom: 1px solid #21262d;
+    }
+    .terminal-dot {
+      width: 12px; height: 12px; border-radius: 50%;
+    }
+    .terminal-dot.red { background: #ff5f57; }
+    .terminal-dot.yellow { background: #febc2e; }
+    .terminal-dot.green { background: #28c840; }
+    .terminal-title {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-left: 8px;
+    }
+    .terminal-body {
+      padding: 1.25rem 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      line-height: 1.8;
+      min-height: 220px;
+    }
+    .terminal-line { color: #8b949e; }
+    .terminal-line .prompt-char { color: #58a6ff; }
+    .terminal-cursor {
+      display: inline-block;
+      width: 8px;
+      height: 16px;
+      background: #58a6ff;
+      animation: blink 1s step-end infinite;
+      vertical-align: text-bottom;
+      margin-left: 2px;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    .skills-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 2rem;
+      justify-content: center;
+    }
+    .skill-tag {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      background: var(--bg-elevated);
+      color: var(--text-secondary);
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: all 0.3s var(--ease-out);
+    }
+    .skill-tag:hover {
+      border-color: rgba(255,255,255,0.15);
+      color: var(--text-primary);
+      transform: translateY(-1px);
+    }
+
+    /* ===== FILTER BAR ===== */
+    .filter-bar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem 1.5rem;
+      background: rgba(10, 11, 15, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: box-shadow 0.3s ease;
+    }
+    .filter-bar.scrolled {
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+    .filter-btn {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      padding: 0.5rem 1.2rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s var(--ease-out);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      white-space: nowrap;
+    }
+    .filter-btn:hover {
+      border-color: rgba(255,255,255,0.2);
+      color: var(--text-primary);
+    }
+    .filter-btn.active {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.2);
+      color: var(--text-primary);
+    }
+    .filter-btn.forge-btn.active {
+      background: var(--forge-dim);
+      border-color: var(--forge-border);
+      color: var(--forge-glow);
+    }
+    .filter-btn.circuit-btn.active {
+      background: var(--circuit-dim);
+      border-color: var(--circuit-border);
+      color: var(--circuit-glow);
+    }
+    .filter-count {
+      font-size: 0.7rem;
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      color: var(--text-muted);
+    }
+    .filter-btn svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    /* ===== SECTION HEADER ===== */
+    .section-label {
+      text-align: center;
+      padding: 3rem 1.5rem 1rem;
+    }
+    .section-label h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .section-label p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+    }
+
+    /* ===== PROJECT CARDS ===== */
+    .projects-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem 4rem;
+    }
+    .project-card {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 0;
+      margin-bottom: 2rem;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out), box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .project-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .project-card.hiding {
+      opacity: 0;
+      transform: scale(0.95);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    /* Zigzag offset on desktop */
+    @media (min-width: 768px) {
+      .project-card:nth-child(even) {
+        margin-left: 10%;
+      }
+      .project-card:nth-child(odd) {
+        margin-right: 10%;
+      }
+    }
+    .card-accent {
+      height: 3px;
+      width: 100%;
+    }
+    .forge-card .card-accent {
+      background: linear-gradient(90deg, var(--forge-primary), #fbbf24, var(--forge-primary));
+      background-size: 200% 100%;
+      animation: ember-pulse 3s ease-in-out infinite;
+    }
+    .circuit-card .card-accent {
+      background: linear-gradient(90deg, var(--circuit-primary), #06b6d4, var(--circuit-primary));
+      background-size: 200% 100%;
+      animation: circuit-trace 4s linear infinite;
+    }
+    @keyframes ember-pulse {
+      0%, 100% { background-position: 0% 0%; }
+      50% { background-position: 100% 0%; }
+    }
+    @keyframes circuit-trace {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 200% 0%; }
+    }
+    .card-inner {
+      padding: 1.75rem 1.75rem 1.5rem;
+    }
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.7rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+    .card-badge svg { width: 12px; height: 12px; }
+    .forge-badge {
+      background: var(--forge-dim);
+      color: var(--forge-glow);
+      border: 1px solid var(--forge-border);
+    }
+    .circuit-badge {
+      background: var(--circuit-dim);
+      color: var(--circuit-glow);
+      border: 1px solid var(--circuit-border);
+    }
+    .project-title {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.6rem;
+    }
+    .project-desc {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.65;
+      margin-bottom: 1.2rem;
+    }
+    .tech-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.2rem;
+    }
+    .tech-tag {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 5px;
+      background: rgba(255,255,255,0.04);
+      color: var(--text-muted);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .forge-card .tech-tag { background: rgba(249,115,22,0.05); border-color: rgba(249,115,22,0.12); }
+    .circuit-card .tech-tag { background: rgba(139,92,246,0.05); border-color: rgba(139,92,246,0.12); }
+    .card-links {
+      display: flex;
+      gap: 1rem;
+    }
+    .card-link {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s ease;
+      position: relative;
+    }
+    .card-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      transition: width 0.3s var(--ease-out);
+    }
+    .card-link:hover::after { width: 100%; }
+    .forge-card .card-link:hover { color: var(--forge-glow); }
+    .forge-card .card-link::after { background: var(--forge-primary); }
+    .circuit-card .card-link:hover { color: var(--circuit-glow); }
+    .circuit-card .card-link::after { background: var(--circuit-primary); }
+    .card-link svg { width: 14px; height: 14px; }
+
+    /* Card hover effects */
+    .forge-card:hover {
+      border-color: var(--forge-border);
+      box-shadow: 0 8px 32px rgba(249, 115, 22, 0.08), 0 0 0 1px rgba(249,115,22,0.1);
+      transform: translateY(-3px);
+    }
+    .circuit-card:hover {
+      border-color: var(--circuit-border);
+      box-shadow: 0 8px 32px rgba(139, 92, 246, 0.08), 0 0 0 1px rgba(139,92,246,0.1);
+      transform: translateY(-3px);
+    }
+    .project-card.visible:hover { transform: translateY(-3px); }
+
+    /* ===== CONTACT ===== */
+    .contact-section {
+      padding: 4rem 1.5rem 3rem;
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+    }
+    .contact-section.visible { opacity: 1; transform: translateY(0); }
+    .contact-prompt {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+    .contact-prompt .cmd { color: #58a6ff; }
+    .contact-prompt .flag { color: #7ee787; }
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .contact-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.7rem 1.4rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      transition: all 0.3s var(--ease-out);
+    }
+    .contact-link:hover {
+      border-color: rgba(255,255,255,0.25);
+      color: var(--text-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+    .contact-link svg { width: 16px; height: 16px; }
+    .footer-note {
+      margin-top: 3rem;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    /* ===== REDUCED MOTION ===== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      html { scroll-behavior: auto; }
+    }
+
+    /* ===== MOBILE ===== */
+    @media (max-width: 767px) {
+      .hero-stats { gap: 1.2rem; }
+      .stat-number { font-size: 2.2rem; }
+      .filter-bar {
+        justify-content: flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      .filter-bar::-webkit-scrollbar { display: none; }
+      .card-inner { padding: 1.25rem; }
+      .project-title { font-size: 1.2rem; }
+      .project-card:nth-child(even),
+      .project-card:nth-child(odd) {
+        margin-left: 0;
+        margin-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HERO ===== -->
+  <header id="hero">
+    <canvas id="heroCanvas"></canvas>
+    <div class="hero-content">
+      <h1 class="hero-name"><span class="forge-half">JA</span><span class="circuit-half">CK</span></h1>
+      <p class="hero-subtitle">// CS student & aspiring data scientist</p>
+      <p class="hero-tagline">I build things by hand. I build things with AI.<br>Here's both.</p>
+      <div class="hero-stats">
+        <div class="stat forge-stat">
+          <span class="stat-number" data-target="2">0</span>
+          <span class="stat-label">Hand-Forged</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat circuit-stat">
+          <span class="stat-number" data-target="5">0</span>
+          <span class="stat-label">AI-Augmented</span>
+        </div>
+      </div>
+      <a href="#about" class="scroll-cta" aria-label="Scroll down">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- ===== ABOUT ===== -->
+  <section id="about" class="about-section">
+    <div class="terminal">
+      <div class="terminal-header">
+        <span class="terminal-dot red"></span>
+        <span class="terminal-dot yellow"></span>
+        <span class="terminal-dot green"></span>
+        <span class="terminal-title">about.sh</span>
+      </div>
+      <div class="terminal-body" id="terminalBody"></div>
+    </div>
+    <div class="skills-grid">
+      <span class="skill-tag">Python</span>
+      <span class="skill-tag">JavaScript</span>
+      <span class="skill-tag">TypeScript</span>
+      <span class="skill-tag">C</span>
+      <span class="skill-tag">React</span>
+      <span class="skill-tag">FastAPI</span>
+      <span class="skill-tag">PostgreSQL</span>
+      <span class="skill-tag">SQLAlchemy</span>
+      <span class="skill-tag">Tailwind CSS</span>
+      <span class="skill-tag">Vite</span>
+      <span class="skill-tag">Vercel</span>
+      <span class="skill-tag">Claude AI</span>
+      <span class="skill-tag">Chrome Extensions</span>
+      <span class="skill-tag">REST APIs</span>
+      <span class="skill-tag">Git</span>
+    </div>
+  </section>
+
+  <!-- ===== FILTER BAR ===== -->
+  <nav id="filterBar" class="filter-bar">
+    <button class="filter-btn active" data-filter="all">
+      All <span class="filter-count">7</span>
+    </button>
+    <button class="filter-btn forge-btn" data-filter="forge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      HandCoded <span class="filter-count">2</span>
+    </button>
+    <button class="filter-btn circuit-btn" data-filter="circuit">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      AI-Assisted <span class="filter-count">5</span>
+    </button>
+  </nav>
+
+  <!-- ===== PROJECTS ===== -->
+  <div class="section-label">
+    <h2>Projects</h2>
+    <p>From C to AI-powered agents</p>
+  </div>
+
+  <section id="projects" class="projects-section">
+
+    <!-- 1. RetroStockPredictor -->
+    <article class="project-card circuit-card" data-category="circuit">
+      <div class="card-accent"></div>
+      <div class="card-inner">
+        <div class="card-badge circuit-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          AI-ASSISTED
+        </div>
+        <h3 class="project-title">RetroStockPredictor</h3>
+        <p class="project-desc">Hierarchical multi-agent system for stock market analysis and paper trading. Features technical, sentiment, and fundamental analysis agents coordinated by a CEO agent, with backtesting capabilities and a full web dashboard.</p>
+        <div class="tech-stack">
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">FastAPI</span>
+          <span class="tech-tag">React</span>
+          <span class="tech-tag">PostgreSQL</span>
+          <span class="tech-tag">Alembic</span>
+          <span class="tech-tag">Vercel</span>
+        </div>
+        <div class="card-links">
+          <a href="https://github.com/Jack-Boop-Boop/RetroStockPredictor" target="_blank" rel="noopener" class="card-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            Source
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 2. Betting-Agents -->
+    <article class="project-card circuit-card" data-category="circuit">
+      <div class="card-accent"></div>
+      <div class="card-inner">
+        <div class="card-badge circuit-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          AI-ASSISTED
+        </div>
+        <h3 class="project-title">Betting-Agents</h3>
+        <p class="project-desc">AI-powered sports betting prediction system covering NBA, UFC, and MLB. Combines handcoded ML models (Elo ratings, calibration, Kelly criterion) with a Claude powered chat assistant for contextual analysis and edge detection.</p>
+        <div class="tech-stack">
+          <span class="tech-tag">FastAPI</span>
+          <span class="tech-tag">React</span>
+          <span class="tech-tag">TypeScript</span>
+          <span class="tech-tag">Claude AI</span>
+          <span class="tech-tag">Tailwind</span>
+        </div>
+        <div class="card-links">
+          <a href="https://github.com/Jack-Boop-Boop/betting-agents" target="_blank" rel="noopener" class="card-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            Source
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 3. CompressionZ827 -->
+    <article class="project-card forge-card" data-category="forge">
+      <div class="card-accent"></div>
+      <div class="card-inner">
+        <div class="card-badge forge-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          HAND-CODED
+        </div>
+        <h3 class="project-title">CompressionZ827</h3>
+        <p class="project-desc">7-bit ASCII compression utility built in C. Packs text by stripping the unused high bit, achieving ~12.5% compression. Features binary file handling with headers, full decompression, and comes with a man page.</p>
+        <div class="tech-stack">
+          <span class="tech-tag">C</span>
+          <span class="tech-tag">Systems Programming</span>
+          <span class="tech-tag">Bit Manipulation</span>
+          <span class="tech-tag">POSIX</span>
+        </div>
+        <div class="card-links">
+          <a href="#" target="_blank" rel="noopener" class="card-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            Source
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 4. LinkedIn Resume Tailor -->
+    <article class="project-card circuit-card" data-category="circuit">
+      <div class="card-accent"></div>
+      <div class="card-inner">
+        <div class="card-badge circuit-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          AI-ASSISTED
+        </div>
+        <h3 class="project-title">LinkedIn Resume Tailor</h3>
+        <p class="project-desc">Chrome extension that auto extracts job details from LinkedIn postings and uses Claude AI to tailor your resume in one click. API keys stay local in the browser for privacy. Costs fractions of a cent per use.</p>
+        <div class="tech-stack">
+          <span class="tech-tag">Chrome Extension</span>
+          <span class="tech-tag">JavaScript</span>
+          <span class="tech-tag">Claude AI</span>
+          <span class="tech-tag">Manifest V3</span>
+        </div>
+        <div class="card-links">
+          <a href="https://github.com/Jack-Boop-Boop/linkedin-resume-tailor" target="_blank" rel="noopener" class="card-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            Source
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 5. Fee Calculator -->
+    <article class="project-card forge-card" data-category="forge">
+      <div class="card-accent"></div>
+      <div class="card-inner">
+        <div class="card-badge forge-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          HANDCODED
+        </div>
+        <h3 class="project-title">Fee Calculator</h3>
+        <p class="project-desc">Web app that helps small business owners calculate true profit per sale after Stripe/Toast fees, shipping, and taxes. Includes break/even analysis, profit margin charts, and monthly financial projections.</p>
+        <div class="tech-stack">
+          <span class="tech-tag">React</span>
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">Recharts</span>
+          <span class="tech-tag">Vercel</span>
+          <span class="tech-tag">Vite</span>
+        </div>
+        <div class="card-links">
+          <a href="https://github.com/Jack-Boop-Boop/fee-calculator" target="_blank" rel="noopener" class="card-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            Source
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 6. Moltbook Assistant -->
+    <article class="project-card circuit-card" data-category="circuit">
+      <div class="card-accent"></div>
+      <div class="card-inner">
+        <div class="card-badge circuit-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          AI-ASSISTED
+        </div>
+        <h3 class="project-title">Moltbook Assistant</h3>
+        <p class="project-desc">Autonomous social media chatbot that monitors and responds to DMs using Claude AI with a custom personality. Features conversation logging, a Flask dashboard, and automated daily PDF summary generation.</p>
+        <div class="tech-stack">
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">Claude AI</span>
+          <span class="tech-tag">Flask</span>
+          <span class="tech-tag">REST API</span>
+          <span class="tech-tag">ReportLab</span>
+        </div>
+        <div class="card-links">
+          <a href="#" target="_blank" rel="noopener" class="card-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            Source
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 7. Portfolio Tracker -->
+    <article class="project-card circuit-card" data-category="circuit">
+      <div class="card-accent"></div>
+      <div class="card-inner">
+        <div class="card-badge circuit-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          AI-ASSISTED
+        </div>
+        <h3 class="project-title">Portfolio Tracker</h3>
+        <p class="project-desc">Investment tracking dashboard that monitors politician and hedge fund portfolios. Features Reddit and news sentiment analysis, trend visualization, and customizable widget layouts.</p>
+        <div class="tech-stack">
+          <span class="tech-tag">FastAPI</span>
+          <span class="tech-tag">React</span>
+          <span class="tech-tag">TypeScript</span>
+          <span class="tech-tag">SQLAlchemy</span>
+          <span class="tech-tag">Tailwind</span>
+        </div>
+        <div class="card-links">
+          <a href="https://github.com/Jack-Boop-Boop/portfolio-tracker" target="_blank" rel="noopener" class="card-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            Source
+          </a>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section id="contact" class="contact-section">
+    <p class="contact-prompt">
+      <span class="cmd">jack@portfolio</span>:<span class="flag">~</span>$ contact <span class="flag">--reach-out</span>
+    </p>
+    <div class="contact-links">
+      <a href="https://github.com/Jack-Boop-Boop" class="contact-link" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        GitHub
+      </a>
+      <a href="https://www.linkedin.com/in/jack-bergin-938823257" class="contact-link" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+      <a href="mailto:Jack.bergin@maine.edu" class="contact-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Email
+      </a>
+    </div>
+    <p class="footer-note">Built with zero dependencies. Just HTML, CSS, and JS.</p>
+  </section>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // ===== PARTICLE SYSTEM =====
+    class ParticleField {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.particles = [];
+        this.mouse = { x: 0, y: 0 };
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+        window.addEventListener('mousemove', (e) => {
+          this.mouse.x = e.clientX;
+          this.mouse.y = e.clientY;
+        });
+      }
+
+      resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+        this.init();
+      }
+
+      init() {
+        this.particles = [];
+        const area = this.canvas.width * this.canvas.height;
+        const count = Math.min(Math.floor(area / 10000), 200);
+        const midX = this.canvas.width / 2;
+
+        for (let i = 0; i < count; i++) {
+          const x = Math.random() * this.canvas.width;
+          const isForge = x < midX;
+          this.particles.push({
+            x,
+            y: Math.random() * this.canvas.height,
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: isForge ? -(Math.random() * 0.6 + 0.1) : (Math.random() - 0.5) * 0.3,
+            size: Math.random() * 2.5 + 0.5,
+            isForge,
+            hue: isForge ? 20 + Math.random() * 25 : 260 + Math.random() * 30,
+            sat: isForge ? 85 + Math.random() * 15 : 65 + Math.random() * 20,
+            light: isForge ? 50 + Math.random() * 20 : 55 + Math.random() * 20,
+            alpha: 0.15 + Math.random() * 0.4,
+            baseAlpha: 0.15 + Math.random() * 0.4,
+            pulse: Math.random() * Math.PI * 2,
+          });
+        }
+      }
+
+      update() {
+        const w = this.canvas.width;
+        const h = this.canvas.height;
+        const midX = w / 2;
+
+        for (const p of this.particles) {
+          p.pulse += 0.02;
+          p.alpha = p.baseAlpha * (0.6 + 0.4 * Math.sin(p.pulse));
+
+          p.x += p.vx;
+          p.y += p.vy;
+
+          // Wrap
+          if (p.isForge) {
+            if (p.y < -10) { p.y = h + 10; p.x = Math.random() * midX; }
+            if (p.x < -10) p.x = midX;
+            if (p.x > midX + 10) p.x = 0;
+          } else {
+            if (p.y < -10) p.y = h + 10;
+            if (p.y > h + 10) p.y = -10;
+            if (p.x < midX - 10) p.x = w;
+            if (p.x > w + 10) p.x = midX;
+          }
+        }
+      }
+
+      draw() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        const midX = this.canvas.width / 2;
+
+        // Draw connections for circuit side (right)
+        const circuitParticles = this.particles.filter(p => !p.isForge);
+        for (let i = 0; i < circuitParticles.length; i++) {
+          for (let j = i + 1; j < circuitParticles.length; j++) {
+            const a = circuitParticles[i];
+            const b = circuitParticles[j];
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 120) {
+              const opacity = (1 - dist / 120) * 0.12;
+              this.ctx.beginPath();
+              this.ctx.strokeStyle = `rgba(139, 92, 246, ${opacity})`;
+              this.ctx.lineWidth = 0.5;
+              this.ctx.moveTo(a.x, a.y);
+              this.ctx.lineTo(b.x, b.y);
+              this.ctx.stroke();
+            }
+          }
+        }
+
+        // Draw particles
+        for (const p of this.particles) {
+          this.ctx.beginPath();
+          this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          this.ctx.fillStyle = `hsla(${p.hue}, ${p.sat}%, ${p.light}%, ${p.alpha})`;
+          this.ctx.fill();
+
+          // Glow effect for forge particles
+          if (p.isForge && p.size > 1.5) {
+            this.ctx.beginPath();
+            this.ctx.arc(p.x, p.y, p.size * 2.5, 0, Math.PI * 2);
+            this.ctx.fillStyle = `hsla(${p.hue}, ${p.sat}%, ${p.light}%, ${p.alpha * 0.15})`;
+            this.ctx.fill();
+          }
+        }
+
+        // Subtle center divider
+        const grad = this.ctx.createLinearGradient(midX, 0, midX, this.canvas.height);
+        grad.addColorStop(0, 'rgba(255,255,255,0)');
+        grad.addColorStop(0.3, 'rgba(255,255,255,0.03)');
+        grad.addColorStop(0.7, 'rgba(255,255,255,0.03)');
+        grad.addColorStop(1, 'rgba(255,255,255,0)');
+        this.ctx.fillStyle = grad;
+        this.ctx.fillRect(midX - 0.5, 0, 1, this.canvas.height);
+      }
+
+      animate() {
+        this.update();
+        this.draw();
+        requestAnimationFrame(() => this.animate());
+      }
+    }
+
+    // ===== SCROLL ANIMATIONS =====
+    function initScrollAnimations() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.project-card, .about-section, .contact-section').forEach((el) => {
+        observer.observe(el);
+      });
+    }
+
+    // ===== STAGGERED CARD ENTRANCE =====
+    function initCardStagger() {
+      const observer = new IntersectionObserver((entries) => {
+        const visible = entries.filter(e => e.isIntersecting);
+        visible.forEach((entry, i) => {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, i * 120);
+          observer.unobserve(entry.target);
+        });
+      }, { threshold: 0.08 });
+
+      document.querySelectorAll('.project-card').forEach(card => observer.observe(card));
+    }
+
+    // ===== FILTER SYSTEM =====
+    function initFilters() {
+      const buttons = document.querySelectorAll('.filter-btn');
+      const cards = document.querySelectorAll('.project-card');
+
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const filter = btn.dataset.filter;
+
+          buttons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          cards.forEach((card, i) => {
+            const category = card.dataset.category;
+            const match = filter === 'all' || category === filter;
+
+            if (match) {
+              card.style.display = '';
+              card.classList.remove('hiding');
+              // Re-trigger animation
+              card.classList.remove('visible');
+              setTimeout(() => {
+                card.classList.add('visible');
+              }, i * 80);
+            } else {
+              card.classList.add('hiding');
+              setTimeout(() => {
+                card.style.display = 'none';
+                card.classList.remove('hiding');
+              }, 300);
+            }
+          });
+        });
+      });
+    }
+
+    // ===== STAT COUNTERS =====
+    function initCounters() {
+      const counters = document.querySelectorAll('.stat-number');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const target = parseInt(el.dataset.target);
+            let current = 0;
+            const step = () => {
+              if (current < target) {
+                current++;
+                el.textContent = current;
+                setTimeout(step, 180);
+              }
+            };
+            step();
+            observer.unobserve(el);
+          }
+        });
+      }, { threshold: 0.5 });
+
+      counters.forEach(c => observer.observe(c));
+    }
+
+    // ===== TERMINAL TYPEWRITER =====
+    function initTypewriter() {
+      const body = document.getElementById('terminalBody');
+      const lines = [
+        { prompt: true, text: 'cat about.txt' },
+        { prompt: false, text: '' },
+        { prompt: false, text: 'CS student who ships real products.' },
+        { prompt: false, text: 'From C compression to agent AI systems.' },
+        { prompt: false, text: 'I create the idea and my tools help bring it to life.' },
+        { prompt: false, text: '' },
+        { prompt: true, text: 'echo $INTERESTS' },
+        { prompt: false, text: 'sports analytics, fintech, ML, systems programming' },
+      ];
+
+      let lineIdx = 0;
+      let charIdx = 0;
+      let started = false;
+
+      function render() {
+        let html = '';
+        for (let i = 0; i < lineIdx; i++) {
+          const l = lines[i];
+          html += '<div class="terminal-line">';
+          if (l.prompt) html += '<span class="prompt-char">$ </span>';
+          html += escapeHtml(l.text);
+          html += '</div>';
+        }
+        if (lineIdx < lines.length) {
+          const current = lines[lineIdx];
+          html += '<div class="terminal-line">';
+          if (current.prompt) html += '<span class="prompt-char">$ </span>';
+          html += escapeHtml(current.text.substring(0, charIdx));
+          html += '<span class="terminal-cursor"></span>';
+          html += '</div>';
+        }
+        body.innerHTML = html;
+      }
+
+      function escapeHtml(str) {
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      function type() {
+        if (lineIdx >= lines.length) {
+          // Remove cursor at end
+          const cursor = body.querySelector('.terminal-cursor');
+          if (cursor) cursor.style.display = 'none';
+          return;
+        }
+
+        const line = lines[lineIdx];
+        if (charIdx <= line.text.length) {
+          render();
+          charIdx++;
+          const delay = line.prompt ? 50 + Math.random() * 30 : 20 + Math.random() * 25;
+          setTimeout(type, delay);
+        } else {
+          lineIdx++;
+          charIdx = 0;
+          setTimeout(type, line.text === '' ? 100 : 350);
+        }
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && !started) {
+          started = true;
+          setTimeout(type, 400);
+          observer.disconnect();
+        }
+      }, { threshold: 0.3 });
+      observer.observe(body);
+    }
+
+    // ===== STICKY FILTER BAR SHADOW =====
+    function initFilterBarScroll() {
+      const bar = document.getElementById('filterBar');
+      const sentinel = document.getElementById('about');
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          bar.classList.toggle('scrolled', !entry.isIntersecting);
+        },
+        { threshold: 0 }
+      );
+      observer.observe(sentinel);
+    }
+
+    // ===== PARALLAX HERO =====
+    function initParallax() {
+      const canvas = document.getElementById('heroCanvas');
+      const hero = document.getElementById('hero');
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            const scrolled = window.pageYOffset;
+            const h = hero.offsetHeight;
+            if (scrolled < h) {
+              canvas.style.transform = `translateY(${scrolled * 0.25}px)`;
+              canvas.style.opacity = 1 - scrolled / h;
+            }
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
+    }
+
+    // ===== SMOOTH SCROLL =====
+    function initSmoothScroll() {
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = document.querySelector(a.getAttribute('href'));
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    }
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', () => {
+      const pf = new ParticleField(document.getElementById('heroCanvas'));
+      pf.animate();
+
+      initScrollAnimations();
+      initCardStagger();
+      initFilters();
+      initCounters();
+      initTypewriter();
+      initFilterBarScroll();
+      initParallax();
+      initSmoothScroll();
+    });
+  </script>
+</body>
+</html>
